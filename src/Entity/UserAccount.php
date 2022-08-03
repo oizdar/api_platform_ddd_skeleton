@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class UserAccount implements UserInterface, PasswordAuthenticatedUserInterface
 {
     private ?int $id;
 
@@ -18,10 +20,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string[]|null
      */
-    private ?array $roles;
+    private ?array $roles = [];
 
-    private ?bool $active;
+    private ?bool $active = true;
 
+    /**
+     * @var Collection<int, ExampleResourceEntity>
+     */
+    private Collection $exampleResourceEntities;
+
+    public function __construct()
+    {
+        $this->exampleResourceEntities = new ArrayCollection();
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -98,6 +109,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setActive(bool $active): self
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ExampleResourceEntity>
+     */
+    public function getExampleResourceEntities(): Collection
+    {
+        return $this->exampleResourceEntities;
+    }
+
+    public function addExampleResourceEntity(ExampleResourceEntity $exampleResourceEntity): self
+    {
+        if (!$this->exampleResourceEntities->contains($exampleResourceEntity)) {
+            $this->exampleResourceEntities->add($exampleResourceEntity);
+            $exampleResourceEntity->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeExampleResourceEntity(ExampleResourceEntity $exampleResourceEntity): self
+    {
+        if ($this->exampleResourceEntities->removeElement($exampleResourceEntity)) {
+            // set the owning side to null (unless already changed)
+            if ($exampleResourceEntity->getOwner() === $this) {
+                $exampleResourceEntity->setOwner(null);
+            }
+        }
 
         return $this;
     }

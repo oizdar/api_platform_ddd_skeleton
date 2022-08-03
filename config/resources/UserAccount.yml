@@ -1,0 +1,9 @@
+resources:
+  App\Entity\UserAccount:
+    description: 'Object representing api users'
+    attributes:
+      normalization_context:
+        groups: [ 'user_account:read' ]
+      denormalization_context:
+        groups: [ 'user_account:write' ]
+    itemOperations: ['get', 'patch']
