@@ -1,0 +1,14 @@
+resources:
+  App\Entity\ExampleResourceEntity:
+    description: 'Object representing Example Filtered resource'
+    attributes:
+      normalization_context:
+        groups: [ 'example_resource_entity:read' ]
+      denormalization_context:
+        groups: [ 'example_resource_entity:write' ]
+      pagination_items_per_page: 20
+      formats:
+        0: 'jsonld'
+        1: 'json'
+        2: 'html'
+        csv: ['text/csv']
