@@ -33,6 +33,7 @@ class UserAccount implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->exampleResourceEntities = new ArrayCollection();
     }
+
     public function getId(): ?int
     {
         return $this->id;

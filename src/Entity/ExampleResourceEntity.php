@@ -52,5 +52,4 @@ class ExampleResourceEntity
 
         return $this;
     }
-
 }
