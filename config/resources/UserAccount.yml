@@ -1,3 +1,13 @@
+App\Entity\UserAccount:
+  properties:
+    username:
+      - NotBlank: ~
+    email:
+      - NotBlank: ~
+      - Email: ~
+    password:
+      - NotBlank: ~
+
 resources:
   App\Entity\UserAccount:
     description: 'Object representing api users'
