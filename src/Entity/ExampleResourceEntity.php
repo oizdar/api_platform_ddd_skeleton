@@ -41,6 +41,11 @@ class ExampleResourceEntity
         return $this->id;
     }
 
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
+    }
+
     public function getOwner(): ?UserAccount
     {
         return $this->owner;
