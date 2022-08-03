@@ -20,7 +20,7 @@ framework:
   serializer:
     mapping:
       paths:
-        - '%kernel.project_dir%/config/serialization'
+        - '%kernel.project_dir%/config/resources'
 
 when@test:
   framework:

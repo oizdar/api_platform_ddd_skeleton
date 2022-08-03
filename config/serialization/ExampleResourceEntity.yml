@@ -1,8 +1,0 @@
-App\Entity\ExampleResourceEntity:
-  attributes:
-    title:
-      groups: ['example_resource_entity:read', 'example_resource_entity:write']
-    description:
-      groups: ['example_resource_entity:read', 'example_resource_entity:write']
-    owner:
-      groups: ['example_resource_entity:read', 'example_resource_entity:write']

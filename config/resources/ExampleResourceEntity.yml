@@ -1,4 +1,4 @@
-App\Entity\UserAccount:
+App\Entity\ExampleResourceEntity:
   properties:
     title:
       - NotBlank: ~
@@ -6,6 +6,13 @@ App\Entity\UserAccount:
       - NotBlank: ~
     owner:
       - NotBlank: ~
+  attributes:
+    title:
+      groups: ['example_resource_entity:read', 'example_resource_entity:write']
+    description:
+      groups: ['example_resource_entity:read', 'example_resource_entity:write']
+    owner:
+      groups: ['example_resource_entity:read', 'example_resource_entity:write']
 
 resources:
   App\Entity\ExampleResourceEntity:
