@@ -15,6 +15,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     private ?string $password;
 
+    /**
+     * @var string[]|null
+     */
     private ?array $roles;
 
     private ?bool $active;
@@ -69,6 +72,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
+    /**
+     * @param string[]|null $roles
+     */
     public function setRoles(?array $roles): void
     {
         $this->roles = $roles;
@@ -79,7 +85,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->email;
     }
 
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // TODO: Implement eraseCredentials() method.
     }
