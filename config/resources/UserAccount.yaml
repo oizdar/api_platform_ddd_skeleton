@@ -30,3 +30,8 @@ resources:
       denormalization_context:
         groups: [ 'user_account:write' ]
     itemOperations: ['get', 'patch']
+    properties:
+      exampleResourceEntities:
+        subresource:
+          resourceClass: App\Entity\ExampleResourceEntity
+          collection: false
