@@ -8,7 +8,7 @@ App\Entity\ExampleResourceEntity:
       - NotBlank: ~
   attributes:
     title:
-      groups: ['example_resource_entity:read', 'example_resource_entity:write']
+      groups: ['example_resource_entity:read', 'example_resource_entity:write', 'user_account:read']
     description:
       groups: ['example_resource_entity:read', 'example_resource_entity:write']
     owner:

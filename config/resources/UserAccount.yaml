@@ -9,7 +9,7 @@ App\Entity\UserAccount:
       - NotBlank: ~
   attributes:
     username:
-      groups: ['user_account:read', 'user_account:write']
+      groups: ['user_account:read', 'user_account:write', 'example_resource_entity:read']
     email:
       groups: ['user_account:read', 'user_account:write']
     password:
@@ -18,6 +18,8 @@ App\Entity\UserAccount:
       groups: ['user_account:read']
     isActive:
       groups: ['user_account:read']
+    exampleResourceEntities:
+      groups: ['user_account:read' ]
 
 resources:
   App\Entity\UserAccount:
