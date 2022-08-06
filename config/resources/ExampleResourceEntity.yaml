@@ -30,8 +30,12 @@ resources:
         csv: ['text/csv']
     itemOperations:
       get: ~
+      patch:
+        security: 'is_granted("ROLE_USER") & object.getOwner() == user'
+        security_message: 'Only the creator can edit exampleResourceEntities.'
       put:
-        security: 'is_granted("ROLE_USER")'
+        security: 'is_granted("ROLE_USER") & object.getOwner() == user'
+        security_message: 'Only the creator can edit exampleResourceEntities.'
       delete:
         security: 'is_granted("ROLE_ADMIN")'
     collectionOperations:
