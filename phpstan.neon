@@ -8,3 +8,7 @@ parameters:
     - migrations
     - config
     - bin
+  ignoreErrors:
+    -
+      message: '#Cannot call method getOwner\(\) on mixed.#'
+      path: src/Security/Voter/ExampleResourceEntityVoter.php

@@ -9,13 +9,18 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class CustomApiTestCase extends ApiTestCase
 {
-    protected function createUserAccount(string $email, string $password): UserAccount
+    /** @param string[] $roles */
+    protected function createUserAccount(string $email, string $password, array $roles = []): UserAccount
     {
         $user = new UserAccount();
         $user->setEmail($email);
-        $user->setUsername(substr($email, 0, strpos($email, '@')));
+        $user->setUsername(substr($email, 0, (int) strpos($email, '@')));
+        $user->setRoles($roles);
 
-        $encodedPassword = self::getContainer()->get('security.password_hasher')->hashPassword($user, $password);
+        /** @var \Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface $hasher */
+        $hasher = self::getContainer()->get('security.password_hasher');
+        $encodedPassword = $hasher->hashPassword($user, $password);
+
         $user->setPassword($encodedPassword);
 
         /** @var EntityManagerInterface $em */
@@ -38,9 +43,10 @@ class CustomApiTestCase extends ApiTestCase
         $this->assertResponseStatusCodeSame(204);
     }
 
-    protected function createUserAccountAndLogIn(Client $client, string $email, string $password): UserAccount
+    /** @param string[] $roles */
+    protected function createUserAccountAndLogIn(Client $client, string $email, string $password, array $roles = []): UserAccount
     {
-        $user = $this->createUserAccount($email, $password);
+        $user = $this->createUserAccount($email, $password, $roles);
         $this->login($client, $email, $password);
 
         return $user;
