@@ -5,4 +5,5 @@ app_login:
 
 app_logout:
   path: /logout
+  methods: [post]
   controller: App\Controller\SecurityController::logout
