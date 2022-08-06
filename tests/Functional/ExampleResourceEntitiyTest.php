@@ -32,6 +32,35 @@ class ExampleResourceEntitiyTest extends CustomApiTestCase
 
         $this->assertResponseStatusCodeSame(422);
     }
+    public function testGetExampleResourceEntitiesNotAuthenticatedThrowsError(): void
+    {
+        $client = self::createClient();
+
+        $client->request('GET', '/api/example_resource_entities');
+
+        $this->assertResponseStatusCodeSame(401);
+    }
+
+    public function testGetExampleResourceEntities(): void
+    {
+        $client = self::createClient();
+
+        $user = $this->createUserAccountAndLogIn($client, 'test@example.com', 'test12345');
+        $exampleResourceEntity = new ExampleResourceEntity();
+        $exampleResourceEntity->setTitle('test');
+        $exampleResourceEntity->setDescription('description');
+        $exampleResourceEntity->setOwner($user);
+
+        /** @var EntityManagerInterface $em */
+        $em = self::getContainer()->get('doctrine.orm.entity_manager');
+        $em->persist($exampleResourceEntity);
+        $em->flush();
+
+        $client->request('GET', '/api/example_resource_entities');
+
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertMatchesResourceCollectionJsonSchema(ExampleResourceEntity::class);
+    }
 
     public function testUpdateWithPatchExampleResourceEntity(): void
     {
@@ -55,6 +84,7 @@ class ExampleResourceEntitiyTest extends CustomApiTestCase
         ]);
 
         $this->assertResponseStatusCodeSame(200);
+        $this->assertMatchesResourceItemJsonSchema(ExampleResourceEntity::class);
     }
 
     public function testUpdateWithPatchExampleResourceEntityWhichUserDoNotOwn(): void
@@ -106,6 +136,7 @@ class ExampleResourceEntitiyTest extends CustomApiTestCase
         ]);
 
         $this->assertResponseStatusCodeSame(200);
+        $this->assertMatchesResourceItemJsonSchema(ExampleResourceEntity::class);
     }
 
     public function testUpdateWithPutExampleResourceEntityWhichUserDoNotOwn(): void

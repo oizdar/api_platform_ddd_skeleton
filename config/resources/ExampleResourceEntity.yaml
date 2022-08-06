@@ -28,6 +28,7 @@ resources:
         1: 'json'
         2: 'html'
         csv: ['text/csv']
+      security: 'is_granted("ROLE_USER")'
     itemOperations:
       get: ~
       patch:
@@ -40,5 +41,4 @@ resources:
         security: 'is_granted("ROLE_ADMIN")'
     collectionOperations:
       get: ~
-      post:
-        security: 'is_granted("ROLE_USER")'
+      post: ~
