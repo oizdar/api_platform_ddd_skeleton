@@ -29,7 +29,17 @@ resources:
         groups: [ 'user_account:read' ]
       denormalization_context:
         groups: [ 'user_account:write' ]
-    itemOperations: ['get', 'patch']
+      security: 'is_granted("ROLE_USER")'
+    itemOperations:
+      get: ~
+      patch:
+        security: 'is_granted("ROLE_USER") & object == user'
+      delete:
+        security: 'is_granted("ROLE_ADMIN")'
+    collectionOperations:
+      get: ~
+      post:
+        security: 'is_granted("PUBLIC_ACCESS")'
     properties:
       exampleResourceEntities:
         subresource:
