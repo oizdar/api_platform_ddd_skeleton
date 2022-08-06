@@ -18,4 +18,9 @@ class SecurityController extends AbstractController
 
         return new Response(null, 204, ['Location' => $iriConverter->getIriFromItem($this->getUser())]);
     }
+
+    public function logout()
+    {
+        throw new \Exception('should not be reached');
+    }
 }

@@ -2,3 +2,7 @@ app_login:
   path: /login
   methods: [post]
   controller: App\Controller\SecurityController::login
+
+app_logout:
+  path: /logout
+  controller: App\Controller\SecurityController::logout
