@@ -32,6 +32,7 @@ class ExampleResourceEntitiyTest extends CustomApiTestCase
 
         $this->assertResponseStatusCodeSame(422);
     }
+
     public function testGetExampleResourceEntitiesNotAuthenticatedThrowsError(): void
     {
         $client = self::createClient();

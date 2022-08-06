@@ -48,6 +48,7 @@ class ExampleResourceEntityVoter extends Voter
                 if ($this->security->isGranted('ROLE_ADMIN')) {
                     return true;
                 }
+
                 return false;
         }
 
