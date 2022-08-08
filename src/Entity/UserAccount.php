@@ -17,6 +17,8 @@ class UserAccount implements UserInterface, PasswordAuthenticatedUserInterface
 
     private ?string $password;
 
+    private ?string $plainPassword;
+
     /**
      * @var string[]|null
      */
@@ -39,9 +41,11 @@ class UserAccount implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    public function setId(?int $id): void
+    public function setId(?int $id): self
     {
         $this->id = $id;
+
+        return $this;
     }
 
     public function getUsername(): ?string
@@ -49,9 +53,11 @@ class UserAccount implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->username;
     }
 
-    public function setUsername(?string $username): void
+    public function setUsername(?string $username): self
     {
         $this->username = $username;
+
+        return $this;
     }
 
     public function getEmail(): ?string
@@ -59,9 +65,11 @@ class UserAccount implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail(?string $email): void
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
+
+        return $this;
     }
 
     public function getPassword(): ?string
@@ -69,9 +77,23 @@ class UserAccount implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
-    public function setPassword(?string $password): void
+    public function setPassword(?string $password): self
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
     }
 
     public function getRoles(): array
@@ -87,9 +109,11 @@ class UserAccount implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @param string[]|null $roles
      */
-    public function setRoles(?array $roles): void
+    public function setRoles(?array $roles): self
     {
         $this->roles = $roles;
+
+        return $this;
     }
 
     public function getUserIdentifier(): string
@@ -99,7 +123,7 @@ class UserAccount implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials(): void
     {
-        // TODO: Implement eraseCredentials() method.
+        $this->plainPassword = null;
     }
 
     public function isActive(): ?bool

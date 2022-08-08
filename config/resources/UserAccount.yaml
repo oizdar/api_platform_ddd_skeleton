@@ -5,15 +5,16 @@ App\Entity\UserAccount:
     email:
       - NotBlank: ~
       - Email: ~
-    password:
+    plainPassword:
       - NotBlank: ~
   attributes:
     username:
       groups: ['user_account:read', 'user_account:write', 'example_resource_entity:read']
     email:
       groups: ['user_account:read', 'user_account:write']
-    password:
+    plainPassword:
       groups: ['user_account:write']
+      serialized_name: password
     roles:
       groups: ['user_account:read']
     isActive:

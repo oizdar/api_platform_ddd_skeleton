@@ -24,6 +24,8 @@ class UserAccountTest extends CustomApiTestCase
 
         $this->assertResponseStatusCodeSame(201);
         $this->assertMatchesResourceItemJsonSchema(UserAccount::class);
+
+        $this->login($client, 'test@example.com', 'test12345');
     }
 
     public function testGetUserAccountsCollectionNotAuthenticatedThrowsError(): void
