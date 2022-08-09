@@ -28,6 +28,52 @@ class UserAccountTest extends CustomApiTestCase
         $this->login($client, 'test@example.com', 'test12345');
     }
 
+    public function testCreateUserInvalidData(): void
+    {
+        $client = self::createClient();
+
+        $client->request('POST', '/api/user_accounts', [
+            'json' => [
+            ],
+        ]);
+
+        $this->assertResponseStatusCodeSame(422);
+        $this->assertJsonContains([
+            'violations' => [
+                [
+                    'propertyPath' => 'username',
+                    'message' => 'This value should not be blank.',
+                ],
+                [
+                    'propertyPath' => 'email',
+                    'message' => 'This value should not be blank.',
+                ],
+                [
+                    'propertyPath' => 'password',
+                    'message' => 'This value should not be blank.',
+                ],
+            ],
+        ]);
+
+        $client->request('POST', '/api/user_accounts', [
+            'json' => [
+                'email' => 'invalidemail',
+                'username' => 'test',
+                'password' => '1234',
+            ],
+        ]);
+
+        $this->assertResponseStatusCodeSame(422);
+        $this->assertJsonContains([
+            'violations' => [
+                [
+                    'propertyPath' => 'email',
+                    'message' => 'This value is not a valid email address.',
+                ],
+            ],
+        ]);
+    }
+
     public function testGetUserAccountsCollectionNotAuthenticatedThrowsError(): void
     {
         $client = self::createClient();

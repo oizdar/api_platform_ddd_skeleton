@@ -5,8 +5,11 @@ App\Entity\UserAccount:
     email:
       - NotBlank: ~
       - Email: ~
+    password:
+      - DisableAutoMapping: ~
     plainPassword:
-      - NotBlank: ~
+      - NotBlank: { groups: [ 'create' ] }
+      - NotCompromisedPassword: ~
   attributes:
     username:
       groups: ['user_account:read', 'user_account:write', 'example_resource_entity:read']
@@ -41,6 +44,7 @@ resources:
       get: ~
       post:
         security: 'is_granted("PUBLIC_ACCESS")'
+        validation_groups: ['Default', 'create']
     properties:
       exampleResourceEntities:
         subresource:
