@@ -55,12 +55,14 @@ class UserAccountTest extends CustomApiTestCase
         $user = $this->createUserAccountAndLogIn($client, 'test@example.com', 'test12345');
 
         $client->request('PATCH', "/api/user_accounts/{$user->getId()}", [
-            'json' => ['op' => 'replace', 'path' => 'title', 'value' => 'updated'],
+            'json' => ['username' => 'updated'],
             'headers' => ['Content-Type' => 'application/merge-patch+json'],
         ]);
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertMatchesResourceItemJsonSchema(UserAccount::class);
+
+        $this->assertJsonContains(['username' => 'updated']);
     }
 
     public function testUpdateWithPatchUserAccountOfOtherUserIsImpossible(): void
@@ -71,7 +73,7 @@ class UserAccountTest extends CustomApiTestCase
         $this->createUserAccountAndLogIn($client, 'logged@example.com', 'test12345');
 
         $client->request('PATCH', "/api/user_accounts/{$user->getId()}", [
-             'json' => ['op' => 'replace', 'path' => 'title', 'value' => 'updated'],
+             'json' => ['username' => 'updated'],
              'headers' => ['Content-Type' => 'application/merge-patch+json'],
          ]);
         $this->assertResponseStatusCodeSame(403);

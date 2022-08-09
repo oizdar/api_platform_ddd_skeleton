@@ -80,12 +80,16 @@ class ExampleResourceEntitiyTest extends CustomApiTestCase
         $em->flush();
 
         $client->request('PATCH', "/api/example_resource_entities/{$exampleResourceEntity->getId()}", [
-            'json' => ['op' => 'replace', 'path' => 'title', 'value' => 'updated'],
+            'json' => ['title' => 'updated'],
             'headers' => ['Content-Type' => 'application/merge-patch+json'],
         ]);
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertMatchesResourceItemJsonSchema(ExampleResourceEntity::class);
+        $this->assertJsonContains([
+            'title' => 'updated',
+            'description' => 'description',
+        ]);
     }
 
     public function testUpdateWithPatchExampleResourceEntityWhichUserDoNotOwn(): void
@@ -109,13 +113,19 @@ class ExampleResourceEntitiyTest extends CustomApiTestCase
         $client->request('PATCH', "/api/example_resource_entities/{$exampleResourceEntity->getId()}", [
             'headers' => ['Content-Type' => 'application/merge-patch+json'],
             'json' => [
-                ['op' => 'replace', 'path' => 'title', 'value' => 'updated'],
-                ['op' => 'replace', 'path' => 'owner', 'value' => "/api/user_accounts/{$user->getId()}"],
+                'title' => 'updated',
+                'owner' => "/api/user_accounts/{$user->getId()}",
             ],
         ]);
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertMatchesResourceItemJsonSchema(ExampleResourceEntity::class);
+        $this->assertJsonContains([
+            'title' => 'updated',
+            'owner' => [
+                '@id' => "/api/user_accounts/{$user->getId()}",
+            ],
+        ]);
     }
 
     public function testUpdateWithPatchExampleResourceEntityWhichUserDoNotOwnButIsAdmin(): void
@@ -138,8 +148,8 @@ class ExampleResourceEntitiyTest extends CustomApiTestCase
 
         $client->request('PATCH', "/api/example_resource_entities/{$exampleResourceEntity->getId()}", [
             'json' => [
-                ['op' => 'replace', 'path' => 'title', 'value' => 'updated'],
-                ['op' => 'replace', 'path' => 'owner', 'value' => "/api/user_accounts/{$user->getId()}"],
+                'title' => 'updated',
+                'owner' => "/api/user_accounts/{$user->getId()}",
             ],
         ]);
 
@@ -168,6 +178,10 @@ class ExampleResourceEntitiyTest extends CustomApiTestCase
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertMatchesResourceItemJsonSchema(ExampleResourceEntity::class);
+        $this->assertJsonContains([
+            'title' => 'updated',
+            'description' => 'description',
+        ]);
     }
 
     public function testUpdateWithPutExampleResourceEntityWhichUserDoNotOwn(): void
