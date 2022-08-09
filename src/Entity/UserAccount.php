@@ -9,15 +9,15 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserAccount implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    private ?int $id;
+    private ?int $id = null;
 
-    private ?string $username;
+    private ?string $username = null;
 
-    private ?string $email;
+    private ?string $email = null;
 
-    private ?string $password;
+    private ?string $password = null;
 
-    private ?string $plainPassword;
+    private ?string $plainPassword = null;
 
     /**
      * @var string[]|null

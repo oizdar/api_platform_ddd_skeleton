@@ -4,13 +4,13 @@ namespace App\Entity;
 
 class ExampleResourceEntity
 {
-    private ?int $id;
+    private ?int $id = null;
 
-    private ?string $title;
+    private ?string $title = null;
 
-    private ?string $description;
+    private ?string $description = null;
 
-    private ?UserAccount $owner;
+    private ?UserAccount $owner = null;
 
     public function getTitle(): ?string
     {
