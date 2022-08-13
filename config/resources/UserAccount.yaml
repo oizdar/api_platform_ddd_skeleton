@@ -24,6 +24,8 @@ App\Entity\UserAccount:
       groups: ['user_account:read']
     exampleResourceEntities:
       groups: ['user_account:read' ]
+    phoneNumber:
+      groups: ['user_account:read', 'user_account:write']
 
 resources:
   App\Entity\UserAccount:

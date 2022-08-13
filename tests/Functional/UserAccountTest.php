@@ -140,4 +140,23 @@ class UserAccountTest extends CustomApiTestCase
         $client->request('DELETE', "/api/user_accounts/{$user->getId()}");
         $this->assertResponseStatusCodeSame(403);
     }
+
+    public function testPhoneNumberField()
+    {
+        $client = self::createClient();
+        $user = $this->createUserAccountAndLogIn($client, 'userphonetest@ex.com', 'test12345');
+
+        $user->setPhoneNumber('999-999-999');
+        $em = self::getContainer()->get('doctrine.orm.entity_manager');
+        $em->persist($user);
+        $em->flush();
+
+        $client->request('GET', '/api/user_accounts/'.$user->getId());
+        $this->assertJsonContains([
+            'username' => 'userphonetest'
+        ]);
+
+        $data = $client->getResponse()->toArray();
+        $this->assertArrayNotHasKey('phoneNumber', $data);
+    }
 }

@@ -16,6 +16,8 @@
 
         <field name="password" type="string" length="255"/>
 
+        <field name="phoneNumber" type="string" length="50" nullable="true"/>
+
         <field name="roles" type="json"/>
 
         <field name="active" type="boolean" />

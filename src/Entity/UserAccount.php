@@ -31,6 +31,8 @@ class UserAccount implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private Collection $exampleResourceEntities;
 
+    private ?string $phoneNumber = null;
+
     public function __construct()
     {
         $this->exampleResourceEntities = new ArrayCollection();
@@ -164,6 +166,18 @@ class UserAccount implements UserInterface, PasswordAuthenticatedUserInterface
                 $exampleResourceEntity->setOwner(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPhoneNumber(): ?string
+    {
+        return $this->phoneNumber;
+    }
+
+    public function setPhoneNumber(?string $phoneNumber): self
+    {
+        $this->phoneNumber = $phoneNumber;
 
         return $this;
     }
