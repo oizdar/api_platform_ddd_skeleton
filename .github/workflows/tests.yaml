@@ -76,4 +76,7 @@ jobs:
       - name: Install Dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
       - name: PhpUnit functional tests
+        env:
+          DATABASE_URL: postgresql://symfony:ChangeMe@127.0.0.1:${{ job.services.postgres.ports[5432] }}/app?serverVersion=11&charset=utf8
         run: php bin/phpunit
+
