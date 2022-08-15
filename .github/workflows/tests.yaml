@@ -41,15 +41,13 @@ jobs:
           POSTGRES_USER: symfony
           POSTGRES_PASSWORD: ChangeMe
           POSTGRES_DB: app_test
-        ports:
-          - 5432/tcp
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
         env:
-          DATABASE_URL: postgresql://symfony:ChangeMe@127.0.0.1:${{ job.services.postgres.ports[5432] }}/app?serverVersion=11&charset=utf8
+          DATABASE_URL: postgresql://symfony:ChangeMe@postgres:5432/app?serverVersion=11&charset=utf8
       - uses: actions/checkout@v3
       - name: Cache Composer packages
         id: composer-cache
