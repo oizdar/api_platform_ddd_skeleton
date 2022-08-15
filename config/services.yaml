@@ -24,6 +24,11 @@ services:
   # please note that last definitions always *replace* previous ones
   App\DataPersister\UserDataPersister: ~
 
+  App\Serializer\AdminGroupsContextBuilder:
+    decorates: 'api_platform.serializer.context_builder'
+    arguments: ['@App\Serializer\AdminGroupsContextBuilder.inner']
+    autoconfigure: false
+
 when@test:
   services:
     test_hasher:

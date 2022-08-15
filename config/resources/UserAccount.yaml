@@ -19,13 +19,13 @@ App\Entity\UserAccount:
       groups: ['user_account:write']
       serialized_name: password
     roles:
-      groups: ['user_account:read']
+      groups: ['user_account:read', 'admin:write']
     isActive:
       groups: ['user_account:read']
     exampleResourceEntities:
       groups: ['user_account:read' ]
     phoneNumber:
-      groups: ['user_account:read', 'user_account:write']
+      groups: ['admin:read', 'user_account:write']
 
 resources:
   App\Entity\UserAccount:
@@ -37,13 +37,15 @@ resources:
         groups: [ 'user_account:write' ]
       security: 'is_granted("ROLE_USER")'
     itemOperations:
-      get: ~
+      get:
+        security: 'is_granted("ROLE_USER")'
       patch:
-        security: 'is_granted("ROLE_USER") & object == user'
+        security: '(is_granted("ROLE_USER") & object == user) || is_granted("ROLE_ADMIN")'
       delete:
         security: 'is_granted("ROLE_ADMIN")'
     collectionOperations:
-      get: ~
+      get:
+        security: 'is_granted("ROLE_USER")'
       post:
         security: 'is_granted("PUBLIC_ACCESS")'
         validation_groups: ['Default', 'create']

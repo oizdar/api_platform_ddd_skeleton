@@ -4,6 +4,7 @@ namespace App\Tests\Functional;
 
 use App\Entity\UserAccount;
 use App\Tests\CustomApiTestCase;
+use Doctrine\ORM\EntityManager;
 use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 
 class UserAccountTest extends CustomApiTestCase
@@ -141,22 +142,100 @@ class UserAccountTest extends CustomApiTestCase
         $this->assertResponseStatusCodeSame(403);
     }
 
-    public function testPhoneNumberField()
+    public function testPhoneNumberField(): void
     {
         $client = self::createClient();
         $user = $this->createUserAccountAndLogIn($client, 'userphonetest@ex.com', 'test12345');
 
         $user->setPhoneNumber('999-999-999');
+        /** @var EntityManager $em */
         $em = self::getContainer()->get('doctrine.orm.entity_manager');
-        $em->persist($user);
         $em->flush();
 
         $client->request('GET', '/api/user_accounts/'.$user->getId());
         $this->assertJsonContains([
-            'username' => 'userphonetest'
+            'username' => 'userphonetest',
         ]);
 
-        $data = $client->getResponse()->toArray();
+        $data = $client->getResponse()?->toArray() ?: [];
         $this->assertArrayNotHasKey('phoneNumber', $data);
+
+        /** @var UserAccount $user */
+        $user = $em->getRepository(UserAccount::class)->find($user->getId());
+        $user->setRoles(['ROLE_ADMIN']);
+        $em->flush();
+
+        $this->login($client, 'userphonetest@ex.com', 'test12345');
+
+        $client->request('GET', '/api/user_accounts/'.$user->getId());
+        $this->assertJsonContains([
+            'username' => 'userphonetest',
+            'phoneNumber' => '999-999-999',
+        ]);
+    }
+
+    public function testOnlyAdminCanUpdateRole(): void
+    {
+        $client = self::createClient();
+        $user = $this->createUserAccountAndLogIn($client, 'usertest@ex.com', 'test12345');
+
+        /** @var EntityManager $em */
+        $em = self::getContainer()->get('doctrine.orm.entity_manager');
+        $em->flush();
+
+        $client->request('GET', '/api/user_accounts/'.$user->getId());
+        $this->assertJsonContains([
+            'username' => 'usertest',
+            'roles' => ['ROLE_USER'],
+        ]);
+
+        $data = $client->getResponse()?->toArray() ?: [];
+        $this->assertArrayNotHasKey('role', $data);
+
+        $client->request('PATCH', "/api/user_accounts/{$user->getId()}", [
+            'json' => ['roles' => ['ROLE_ADMIN']],
+            'headers' => ['Content-Type' => 'application/merge-patch+json'],
+        ]);
+
+        // not available for  basic user then does not update role
+        $client->request('GET', '/api/user_accounts/'.$user->getId());
+        $this->assertJsonContains([
+            'username' => 'usertest',
+            'roles' => ['ROLE_USER'],
+        ]);
+
+        /** @var UserAccount $user */
+        $user = $em->getRepository(UserAccount::class)->find($user->getId());
+        $user->setRoles(['ROLE_ADMIN']);
+        $em->flush();
+
+        $this->login($client, 'usertest@ex.com', 'test12345');
+        // test proper role is returned
+        $client->request('GET', '/api/user_accounts/'.$user->getId());
+        $this->assertJsonContains([
+            'username' => 'usertest',
+            'roles' => ['ROLE_ADMIN'],
+        ]);
+
+        // create next user accout to test
+        $user2 = $this->createUserAccount('user2@test.pl', 'test2');
+        $client->request('GET', '/api/user_accounts/'.$user2->getId());
+        $this->assertJsonContains([
+            'username' => 'user2',
+            'roles' => ['ROLE_USER'],
+        ]);
+
+        $this->login($client, 'usertest@ex.com', 'test12345');
+        $client->request('PATCH', "/api/user_accounts/{$user2->getId()}", [
+            'json' => ['roles' => ['ROLE_ADMIN']],
+            'headers' => ['Content-Type' => 'application/merge-patch+json'],
+        ]);
+
+        $this->login($client, 'usertest@ex.com', 'test12345');
+        $client->request('GET', '/api/user_accounts/'.$user2->getId());
+        $this->assertJsonContains([
+            'username' => 'user2',
+            'roles' => ['ROLE_ADMIN'],
+        ]);
     }
 }
