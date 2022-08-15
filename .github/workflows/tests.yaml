@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: static-analysis
     env:
-      DATABASE_URL: postgresql://symfony:ChangeMe@localhost:5432/app_test?serverVersion=11&charset=utf8
+      DATABASE_URL: postgresql://symfony:ChangeMe@localhost:5432/app?serverVersion=11&charset=utf8
     services:
       postgres:
         image: postgres:13
@@ -66,7 +66,7 @@ jobs:
       - name: Install Dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
       - name: Install DB
-        run: bin/console doctrine:schema:create
+        run: bin/console doctrine:schema:create --env=test
       - name: PhpUnit functional tests
         run: php bin/phpunit
 
