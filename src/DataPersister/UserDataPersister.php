@@ -23,7 +23,7 @@ class UserDataPersister implements DataPersisterInterface
     /**
      * @param UserAccount $data
      */
-    public function persist($data): void
+    public function persist($data): UserAccount
     {
         if ($data->getPlainPassword()) {
             $data->setPassword(
@@ -33,6 +33,8 @@ class UserDataPersister implements DataPersisterInterface
         }
         $this->entityManager->persist($data);
         $this->entityManager->flush();
+
+        return $data;
     }
 
     /**
