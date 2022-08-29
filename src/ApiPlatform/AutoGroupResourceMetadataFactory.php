@@ -28,6 +28,7 @@ class AutoGroupResourceMetadataFactory implements ResourceMetadataFactoryInterfa
 
     /**
      * @param array<string, array<string, string>> $operations
+     *
      * @return array<string, array<string, string>>
      */
     private function updateContextOnOperations(array $operations, string $shortName, bool $isItem): array
