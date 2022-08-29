@@ -17,6 +17,7 @@ App\Entity\ExampleResourceEntity:
 resources:
   App\Entity\ExampleResourceEntity:
     description: 'Object representing Example Filtered resource'
+    shortName: 'example_resource_entity'
     attributes:
       pagination_items_per_page: 20
       formats:
@@ -38,3 +39,7 @@ resources:
     collectionOperations:
       get: ~
       post: ~
+    properties:
+      owner:
+        readableLink: false
+        writableLink: false

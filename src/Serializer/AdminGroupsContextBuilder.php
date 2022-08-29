@@ -29,7 +29,6 @@ final class AdminGroupsContextBuilder implements SerializerContextBuilderInterfa
         $context['groups'] = $context['groups'] ?? [];
         $context['groups'] = array_merge($context['groups'], $this->addDefaultGroups($context, $normalization));
 
-
         $isAdmin = $this->authorizationChecker->isGranted('ROLE_ADMIN');
 
         if ($isAdmin) {
@@ -43,6 +42,7 @@ final class AdminGroupsContextBuilder implements SerializerContextBuilderInterfa
 
     /**
      * @return string[]
+     *
      * @throws \ReflectionException
      */
     private function addDefaultGroups(array $context, bool $normalization): array

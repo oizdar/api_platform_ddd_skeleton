@@ -20,7 +20,7 @@ App\Entity\UserAccount:
       serialized_name: password
     roles:
       groups: ['user_account:read', 'admin:write']
-    isActive:
+    active:
       groups: ['user_account:read']
     exampleResourceEntities:
       groups: ['user_account:read' ]
@@ -29,12 +29,9 @@ App\Entity\UserAccount:
 
 resources:
   App\Entity\UserAccount:
+    shortName: 'user_account'
     description: 'Object representing api users'
     attributes:
-      normalization_context:
-        groups: [ 'user_account:read' ]
-      denormalization_context:
-        groups: [ 'user_account:write' ]
       security: 'is_granted("ROLE_USER")'
     itemOperations:
       get:

@@ -122,9 +122,7 @@ class ExampleResourceEntitiyTest extends CustomApiTestCase
         $this->assertMatchesResourceItemJsonSchema(ExampleResourceEntity::class);
         $this->assertJsonContains([
             'title' => 'updated',
-            'owner' => [
-                '@id' => "/api/user_accounts/{$user->getId()}",
-            ],
+            'owner' => "/api/user_accounts/{$user->getId()}",
         ]);
     }
 
