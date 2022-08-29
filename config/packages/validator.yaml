@@ -14,3 +14,8 @@ when@test:
   framework:
     validation:
       not_compromised_password: false
+
+when@local:
+  framework:
+    validation:
+      not_compromised_password: false
