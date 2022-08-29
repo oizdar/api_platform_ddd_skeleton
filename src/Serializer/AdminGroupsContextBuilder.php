@@ -6,6 +6,9 @@ use ApiPlatform\Core\Serializer\SerializerContextBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
+/**
+ * @template T of object
+ */
 final class AdminGroupsContextBuilder implements SerializerContextBuilderInterface
 {
     private SerializerContextBuilderInterface $decorated;
@@ -41,6 +44,8 @@ final class AdminGroupsContextBuilder implements SerializerContextBuilderInterfa
     }
 
     /**
+     * @param string[] $context
+     *
      * @return string[]
      *
      * @throws \ReflectionException

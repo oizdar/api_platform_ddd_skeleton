@@ -22,9 +22,14 @@ class AutoGroupResourceMetadataFactory implements ResourceMetadataFactoryInterfa
         $resourceMetadata = $resourceMetadata->withCollectionOperations(
             $this->updateContextOnOperations($collectionOperations, $resourceMetadata->getShortName() ?? '', false)
         );
+
         return $resourceMetadata;
     }
 
+    /**
+     * @param array<string, array<string, string>> $operations
+     * @return array<string, array<string, string>>
+     */
     private function updateContextOnOperations(array $operations, string $shortName, bool $isItem): array
     {
         foreach ($operations as $operationName => $operationOptions) {

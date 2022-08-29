@@ -9,6 +9,7 @@ parameters:
     - config
     - bin
   ignoreErrors:
-    -
-      message: '#Cannot call method getOwner\(\) on mixed.#'
+    - message: '#Cannot call method getOwner\(\) on mixed.#'
       path: src/Security/Voter/ExampleResourceEntityVoter.php
+    - message: '#Parameter \#1 $objectOrClass of class ReflectionClass constructor expects class-string<T of object>|T of object, string given.#'
+      path: src/Serializer/AdminGroupsContextBuilder.php
