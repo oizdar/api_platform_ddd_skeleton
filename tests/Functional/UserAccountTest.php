@@ -25,7 +25,11 @@ class UserAccountTest extends CustomApiTestCase
 
         $this->assertResponseStatusCodeSame(201);
         $this->assertMatchesResourceItemJsonSchema(UserAccount::class);
-
+        $this->assertJsonContains([
+            '@type' => 'user_account',
+            'email' => 'test@example.com',
+            'username' => 'test',
+        ]);
         $this->login($client, 'test@example.com', 'test12345');
     }
 
@@ -145,7 +149,8 @@ class UserAccountTest extends CustomApiTestCase
     public function testPhoneNumberField(): void
     {
         $client = self::createClient();
-        $user = $this->createUserAccountAndLogIn($client, 'userphonetest@ex.com', 'test12345');
+        $user = $this->createUserAccount('userphonetest@ex.com', 'test12345');
+        $this->createUserAccountAndLogIn($client, 'differentuser@example.com', 'test21235');
 
         $user->setPhoneNumber('999-999-999');
         /** @var EntityManager $em */
@@ -171,6 +176,33 @@ class UserAccountTest extends CustomApiTestCase
         $this->assertJsonContains([
             'username' => 'userphonetest',
             'phoneNumber' => '999-999-999',
+        ]);
+    }
+
+    public function testPhoneNumberFieldUserCanSeeOnlyOwnPhoneNumber(): void
+    {
+        $client = self::createClient();
+        $user = $this->createUserAccount('userphonetest@ex.com', 'test12345');
+        $user->setPhoneNumber('999-999-999');
+        $user2 = $this->createUserAccountAndLogIn($client, 'userphonetest2@ex.com', 'test12345');
+        $user2->setPhoneNumber('111-222-333');
+
+        /** @var EntityManager $em */
+        $em = self::getContainer()->get('doctrine.orm.entity_manager');
+        $em->flush();
+
+        $client->request('GET', '/api/user_accounts/'.$user->getId());
+        $this->assertJsonContains([
+            'username' => 'userphonetest',
+        ]);
+
+        $data = $client->getResponse()?->toArray() ?: [];
+        $this->assertArrayNotHasKey('phoneNumber', $data);
+
+        $client->request('GET', '/api/user_accounts/'.$user2->getId());
+        $this->assertJsonContains([
+            'username' => 'userphonetest2',
+            'phoneNumber' => '111-222-333',
         ]);
     }
 
