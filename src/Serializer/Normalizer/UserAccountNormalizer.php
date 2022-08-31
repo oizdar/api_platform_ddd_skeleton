@@ -20,7 +20,7 @@ class UserAccountNormalizer implements NormalizerInterface, CacheableSupportsMet
     }
 
     /**
-     * @param UserAccount $object
+     * @param UserAccount             $object
      * @param array<string, string[]> $context
      */
     public function normalize($object, string $format = null, array $context = [])
@@ -54,7 +54,6 @@ class UserAccountNormalizer implements NormalizerInterface, CacheableSupportsMet
 
     private function userIsOwner(UserAccount $object): bool
     {
-
         return $this->security->getUser()?->getUserIdentifier() === $object->getUserIdentifier();
     }
 }

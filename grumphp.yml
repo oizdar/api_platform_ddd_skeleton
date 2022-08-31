@@ -1,0 +1,9 @@
+grumphp:
+  parallel:
+    enabled: true
+    max_workers: 32
+  tasks:
+    phpcsfixer: ~
+    phpstan: ~
+    phpunit: ~
+
