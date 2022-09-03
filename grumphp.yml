@@ -4,7 +4,9 @@ grumphp:
     max_workers: 32
   tasks:
     phpcsfixer:
-      config: '.php-cs-fixer.dist.php'
+      config: .php-cs-fixer.php
+      using_cache: true
+      cache_file: .php-cs-fixer.cache
     phpstan: ~
     phpunit: ~
 
