@@ -110,7 +110,7 @@ class ExampleResourceEntitiyTest extends CustomApiTestCase
         $this->assertMatchesResourceCollectionJsonSchema(ExampleResourceEntity::class);
         $this->assertJsonContains(['hydra:totalItems' => 2]);
 
-        $this->createUserAccountAndLogIn($client, 'test@example.com', 'test12345', ['ROLE_ADMIN']);
+        $this->createUserAccountAndLogIn($client, 'test2@example.com', 'test12345', ['ROLE_ADMIN']);
 
         $client->request('GET', '/api/example_resource_entities');
         $this->assertResponseStatusCodeSame(200);
@@ -122,7 +122,7 @@ class ExampleResourceEntitiyTest extends CustomApiTestCase
     {
         $client = self::createClient();
 
-        $user = $this->createUserAccount('test@example.com', 'test12345');
+        $user = $this->createUserAccountAndLogIn($client, 'test@example.com', 'test12345');
         $exampleResourceEntity1 = new ExampleResourceEntity();
         $exampleResourceEntity1->setTitle('test1');
         $exampleResourceEntity1->setDescription('description');
@@ -148,6 +148,11 @@ class ExampleResourceEntitiyTest extends CustomApiTestCase
         $client->request('GET', '/api/example_resource_entities/'.$exampleResourceEntity1->getId());
         $this->assertResponseStatusCodeSame(404);
 
+        $client->request('GET', '/api/user_accounts/'.$user->getId());
+        $this->assertResponseStatusCodeSame(200);
+        $responseData = $client->getResponse()?->toArray();
+        $this->assertCount(1, $responseData['exampleResourceEntities'] ?? []);
+
         $this->createUserAccountAndLogIn($client, 'test2@example.com', 'test12345', ['ROLE_ADMIN']);
 
         $client->request('GET', '/api/example_resource_entities/'.$exampleResourceEntity1->getId());
@@ -165,6 +170,7 @@ class ExampleResourceEntitiyTest extends CustomApiTestCase
         $exampleResourceEntity->setTitle('test');
         $exampleResourceEntity->setDescription('description');
         $exampleResourceEntity->setOwner($user);
+        $exampleResourceEntity->setPublished(true);
 
         /** @var EntityManagerInterface $em */
         $em = self::getContainer()->get('doctrine.orm.entity_manager');
@@ -228,6 +234,7 @@ class ExampleResourceEntitiyTest extends CustomApiTestCase
         $exampleResourceEntity->setTitle('test');
         $exampleResourceEntity->setDescription('description');
         $exampleResourceEntity->setOwner($user);
+        $exampleResourceEntity->setPublished(true);
 
         /** @var EntityManagerInterface $em */
         $em = self::getContainer()->get('doctrine.orm.entity_manager');
@@ -256,6 +263,7 @@ class ExampleResourceEntitiyTest extends CustomApiTestCase
         $exampleResourceEntity->setTitle('test');
         $exampleResourceEntity->setDescription('description');
         $exampleResourceEntity->setOwner($user);
+        $exampleResourceEntity->setPublished(true);
 
         /** @var EntityManagerInterface $em */
         $em = self::getContainer()->get('doctrine.orm.entity_manager');
@@ -284,6 +292,7 @@ class ExampleResourceEntitiyTest extends CustomApiTestCase
         $exampleResourceEntity->setTitle('test');
         $exampleResourceEntity->setDescription('description');
         $exampleResourceEntity->setOwner($user);
+        $exampleResourceEntity->setPublished(true);
 
         /** @var EntityManagerInterface $em */
         $em = self::getContainer()->get('doctrine.orm.entity_manager');

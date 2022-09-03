@@ -148,6 +148,16 @@ class UserAccount implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->exampleResourceEntities;
     }
 
+    /**
+     * @return Collection<int, ExampleResourceEntity>
+     */
+    public function getPublishedExampleResourceEntities(): Collection
+    {
+        return $this->exampleResourceEntities->filter(function (ExampleResourceEntity $exampleResourceEntity) {
+            return true == $exampleResourceEntity->isPublished();
+        });
+    }
+
     public function addExampleResourceEntity(ExampleResourceEntity $exampleResourceEntity): self
     {
         if (!$this->exampleResourceEntities->contains($exampleResourceEntity)) {

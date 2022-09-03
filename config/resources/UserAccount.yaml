@@ -23,7 +23,10 @@ App\Entity\UserAccount:
     active:
       groups: ['user_account:read']
     exampleResourceEntities:
-      groups: ['user_account:read' ]
+      groups: ['user_account:write']
+    publishedExampleResourceEntities:
+      groups: [ 'user_account:read' ]
+      serialized_name: exampleResourceEntities
     phoneNumber:
       groups: ['admin:read', 'user_account:write', 'owner:read']
 
