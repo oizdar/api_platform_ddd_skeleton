@@ -109,6 +109,50 @@ class ExampleResourceEntitiyTest extends CustomApiTestCase
         $this->assertResponseStatusCodeSame(200);
         $this->assertMatchesResourceCollectionJsonSchema(ExampleResourceEntity::class);
         $this->assertJsonContains(['hydra:totalItems' => 2]);
+
+        $this->createUserAccountAndLogIn($client, 'test@example.com', 'test12345', ['ROLE_ADMIN']);
+
+        $client->request('GET', '/api/example_resource_entities');
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertMatchesResourceCollectionJsonSchema(ExampleResourceEntity::class);
+        $this->assertJsonContains(['hydra:totalItems' => 3]);
+    }
+
+    public function testGetExampleResourceEntityItem(): void
+    {
+        $client = self::createClient();
+
+        $user = $this->createUserAccount('test@example.com', 'test12345');
+        $exampleResourceEntity1 = new ExampleResourceEntity();
+        $exampleResourceEntity1->setTitle('test1');
+        $exampleResourceEntity1->setDescription('description');
+        $exampleResourceEntity1->setOwner($user);
+
+        $exampleResourceEntity2 = new ExampleResourceEntity();
+        $exampleResourceEntity2->setTitle('test2');
+        $exampleResourceEntity2->setDescription('description');
+        $exampleResourceEntity2->setOwner($user);
+        $exampleResourceEntity2->setPublished(true);
+
+        /** @var EntityManagerInterface $em */
+        $em = self::getContainer()->get('doctrine.orm.entity_manager');
+        $em->persist($exampleResourceEntity1);
+        $em->persist($exampleResourceEntity2);
+        $em->flush();
+
+        $client->request('GET', '/api/example_resource_entities/'.$exampleResourceEntity2->getId());
+
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertMatchesResourceItemJsonSchema(ExampleResourceEntity::class);
+
+        $client->request('GET', '/api/example_resource_entities/'.$exampleResourceEntity1->getId());
+        $this->assertResponseStatusCodeSame(404);
+
+        $this->createUserAccountAndLogIn($client, 'test2@example.com', 'test12345', ['ROLE_ADMIN']);
+
+        $client->request('GET', '/api/example_resource_entities/'.$exampleResourceEntity1->getId());
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertMatchesResourceItemJsonSchema(ExampleResourceEntity::class);
     }
 
     public function testUpdateWithPatchExampleResourceEntity(): void
