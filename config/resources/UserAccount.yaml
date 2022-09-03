@@ -12,7 +12,7 @@ App\Entity\UserAccount:
       - NotCompromisedPassword: ~
   attributes:
     username:
-      groups: ['user_account:read', 'user_account:write', 'example_resource_entity:read']
+      groups: ['user_account:read', 'user_account:write', 'example_resource_entity:item:get']
     email:
       groups: ['user_account:read', 'user_account:write']
     plainPassword:

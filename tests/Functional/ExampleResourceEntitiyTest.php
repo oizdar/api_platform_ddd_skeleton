@@ -42,6 +42,30 @@ class ExampleResourceEntitiyTest extends CustomApiTestCase
         $this->assertResponseStatusCodeSame(401);
     }
 
+    public function testCreateExampleResourceEntityOwnerValidation(): void
+    {
+        $client = self::createClient();
+
+        $authenticatedUser = $this->createUserAccountAndLogIn($client, 'test@example.com', 'test12345');
+        $otherUser = $this->createUserAccount('test2@example.com', 'test12345');
+
+        $exampleResourceEntityData = [
+            'title' => 'example title',
+            'description' => 'description example ',
+        ];
+
+        $client->request('POST', '/api/example_resource_entities', [
+            'json' => $exampleResourceEntityData + ['owner' => '/api/user_accounts/'.$otherUser->getId()],
+        ]);
+
+        $this->assertResponseStatusCodeSame(422, 'not passing the correct owner');
+
+        $client->request('POST', '/api/example_resource_entities', [
+            'json' => $exampleResourceEntityData + ['owner' => '/api/user_accounts/'.$authenticatedUser->getId()],
+        ]);
+        $this->assertResponseStatusCodeSame(201);
+    }
+
     public function testGetExampleResourceEntities(): void
     {
         $client = self::createClient();

@@ -3,7 +3,8 @@ grumphp:
     enabled: true
     max_workers: 32
   tasks:
-    phpcsfixer: ~
+    phpcsfixer:
+      config: '.php-cs-fixer.dist.php'
     phpstan: ~
     phpunit: ~
 

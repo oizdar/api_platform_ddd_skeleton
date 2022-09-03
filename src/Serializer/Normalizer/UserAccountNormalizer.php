@@ -25,13 +25,19 @@ class UserAccountNormalizer implements NormalizerInterface, CacheableSupportsMet
      */
     public function normalize($object, string $format = null, array $context = [])
     {
-        if ($this->userIsOwner($object)) {
+        $isOwner = $this->userIsOwner($object);
+        if ($isOwner) {
             $context['groups'][] = 'owner:read';
         }
 
         $context[self::ALREADY_CALLED] = true;
 
-        return $this->normalizer->normalize($object, $format, $context);
+        /** @var array<string, mixed> $data */
+        $data = $this->normalizer->normalize($object, $format, $context);
+
+        $data['isMe'] = $isOwner;
+
+        return $data;
     }
 
     /**
