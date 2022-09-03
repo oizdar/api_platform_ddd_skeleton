@@ -66,6 +66,24 @@ class ExampleResourceEntitiyTest extends CustomApiTestCase
         $this->assertResponseStatusCodeSame(201);
     }
 
+    public function testCreateExampleResourceEnityDoesntRequireOwnerAndSetsDefaultAsCurrent(): void
+    {
+        $client = self::createClient();
+
+        $authenticatedUser = $this->createUserAccountAndLogIn($client, 'test@example.com', 'test12345');
+
+        $client->request('POST', '/api/example_resource_entities', [
+            'json' => [
+                'title' => 'example title',
+                'description' => 'description example ',
+            ],
+        ]);
+
+        $this->assertResponseStatusCodeSame(201);
+        $this->assertMatchesResourceItemJsonSchema(ExampleResourceEntity::class);
+        $this->assertJsonContains(['owner' => '/api/user_accounts/'.$authenticatedUser->getId()]);
+    }
+
     public function testGetExampleResourceEntities(): void
     {
         $client = self::createClient();

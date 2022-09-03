@@ -5,7 +5,7 @@ App\Entity\ExampleResourceEntity:
     description:
       - NotBlank: ~
     owner:
-      - NotBlank: ~
+      - DisableAutoMapping: ~ #disabled because default value is set with doctrine entity listener on prePersist event
       - App\Validator\IsValidOwner: ~
   attributes:
     title:

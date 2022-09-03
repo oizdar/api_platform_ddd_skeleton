@@ -33,6 +33,9 @@ services:
     arguments: [ '@App\ApiPlatform\AutoGroupResourceMetadataFactory.inner' ]
     decoration_priority: -20  #set decorator priority before caching mechanism
 
+  App\Doctrine\ExampleResourceEntitySetOwnerListener:
+    tags: ['doctrine.orm.entity_listener']
+
 when@test:
   services:
     test_hasher:

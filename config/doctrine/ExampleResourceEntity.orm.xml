@@ -5,6 +5,9 @@
                           https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
     <entity name="App\Entity\ExampleResourceEntity" repository-class="App\Repository\ExampleResourceEntityRepository">
+        <entity-listeners>
+            <entity-listener class="App\Doctrine\ExampleResourceEntitySetOwnerListener" />
+        </entity-listeners>
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
             <sequence-generator sequence-name="example_resource_entity_id_seq" />
