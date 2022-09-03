@@ -9,4 +9,15 @@ grumphp:
       cache_file: .php-cs-fixer.cache
     phpstan: ~
     phpunit: ~
+  testsuites:
+    git_pre_commit:
+      tasks:
+        - phpcsfixer
+        - phpstan
+    git_pre_push:
+      tasks:
+        - phpcsfixer
+        - phpstan
+        - phpunit
+
 
