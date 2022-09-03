@@ -10,6 +10,8 @@ class ExampleResourceEntity
 
     private ?string $description = null;
 
+    private ?bool $published = false;
+
     private ?UserAccount $owner = null;
 
     public function getTitle(): ?string
@@ -41,9 +43,23 @@ class ExampleResourceEntity
         return $this->id;
     }
 
-    public function setId(?int $id): void
+    public function setId(?int $id): self
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    public function isPublished(): ?bool
+    {
+        return $this->published;
+    }
+
+    public function setPublished(?bool $published): self
+    {
+        $this->published = $published;
+
+        return $this;
     }
 
     public function getOwner(): ?UserAccount

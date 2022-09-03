@@ -17,6 +17,12 @@
 
         <field name="description" type="text"/>
 
+        <field name="published" type="boolean">
+            <options>
+                <option name="default">false</option>
+            </options>
+        </field>
+
         <many-to-one field="owner" target-entity="App\Entity\UserAccount" inversed-by="exampleResourceEntities">
             <join-column name="owner_id" nullable="false"/>
         </many-to-one>

@@ -33,15 +33,6 @@ class ExampleResourceEntitiyTest extends CustomApiTestCase
         $this->assertResponseStatusCodeSame(422);
     }
 
-    public function testGetExampleResourceEntitiesNotAuthenticatedThrowsError(): void
-    {
-        $client = self::createClient();
-
-        $client->request('GET', '/api/example_resource_entities');
-
-        $this->assertResponseStatusCodeSame(401);
-    }
-
     public function testCreateExampleResourceEntityOwnerValidation(): void
     {
         $client = self::createClient();
@@ -84,25 +75,40 @@ class ExampleResourceEntitiyTest extends CustomApiTestCase
         $this->assertJsonContains(['owner' => '/api/user_accounts/'.$authenticatedUser->getId()]);
     }
 
-    public function testGetExampleResourceEntities(): void
+    public function testGetExampleResourceEntitiesCollection(): void
     {
         $client = self::createClient();
 
-        $user = $this->createUserAccountAndLogIn($client, 'test@example.com', 'test12345');
-        $exampleResourceEntity = new ExampleResourceEntity();
-        $exampleResourceEntity->setTitle('test');
-        $exampleResourceEntity->setDescription('description');
-        $exampleResourceEntity->setOwner($user);
+        $user = $this->createUserAccount('test@example.com', 'test12345');
+        $exampleResourceEntity1 = new ExampleResourceEntity();
+        $exampleResourceEntity1->setTitle('test1');
+        $exampleResourceEntity1->setDescription('description');
+        $exampleResourceEntity1->setOwner($user);
+
+        $exampleResourceEntity2 = new ExampleResourceEntity();
+        $exampleResourceEntity2->setTitle('test2');
+        $exampleResourceEntity2->setDescription('description');
+        $exampleResourceEntity2->setOwner($user);
+        $exampleResourceEntity2->setPublished(true);
+
+        $exampleResourceEntity3 = new ExampleResourceEntity();
+        $exampleResourceEntity3->setTitle('test3');
+        $exampleResourceEntity3->setDescription('description');
+        $exampleResourceEntity3->setOwner($user);
+        $exampleResourceEntity3->setPublished(true);
 
         /** @var EntityManagerInterface $em */
         $em = self::getContainer()->get('doctrine.orm.entity_manager');
-        $em->persist($exampleResourceEntity);
+        $em->persist($exampleResourceEntity1);
+        $em->persist($exampleResourceEntity2);
+        $em->persist($exampleResourceEntity3);
         $em->flush();
 
         $client->request('GET', '/api/example_resource_entities');
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertMatchesResourceCollectionJsonSchema(ExampleResourceEntity::class);
+        $this->assertJsonContains(['hydra:totalItems' => 2]);
     }
 
     public function testUpdateWithPatchExampleResourceEntity(): void

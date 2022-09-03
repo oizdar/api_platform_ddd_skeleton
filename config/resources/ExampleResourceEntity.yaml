@@ -4,6 +4,8 @@ App\Entity\ExampleResourceEntity:
       - NotBlank: ~
     description:
       - NotBlank: ~
+    published:
+      - DisableAutoMapping: ~ #default value (false) is set as argument value
     owner:
       - DisableAutoMapping: ~ #disabled because default value is set with doctrine entity listener on prePersist event
       - App\Validator\IsValidOwner: ~
@@ -12,6 +14,8 @@ App\Entity\ExampleResourceEntity:
       groups: ['example_resource_entity:read', 'example_resource_entity:write', 'user_account:read']
     description:
       groups: ['example_resource_entity:read', 'example_resource_entity:write']
+    published:
+      groups: ['example_resource_entity:write']
     owner:
       groups: ['example_resource_entity:read', 'example_resource_entity:collection:post']
 
@@ -28,7 +32,8 @@ resources:
         csv: ['text/csv']
       security: 'is_granted("ROLE_USER")'
     itemOperations:
-      get: ~
+      get:
+        security: 'is_granted("PUBLIC_ACCESS")'
       patch:
         security: 'is_granted("EXAMPLE_RESOURCE_ENTITY_EDIT", object)'
         security_message: 'Only the creator can edit exampleResourceEntities.'
@@ -38,7 +43,8 @@ resources:
       delete:
         security: 'is_granted("ROLE_ADMIN")'
     collectionOperations:
-      get: ~
+      get:
+        security: 'is_granted("PUBLIC_ACCESS")'
       post: ~
     properties:
       owner:
